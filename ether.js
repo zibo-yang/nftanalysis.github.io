@@ -3,24 +3,69 @@ const provider = new Web3.providers.WebsocketProvider(path);
 provider.on('error', e => console.error('WS Error', e));
 provider.on('end', e => console.error('WS End', e));
 
-var web3 = new Web3(provider);
+const web3 = new Web3(provider);
+
+const abi_file_list = ['./abi1.json', './abi2.json'];
+const contract_address_list = ['0x06012c8cf97bead5deae237070f9587f8e7a266d', '0xb47e3cd837dDF8e4c57F05d70Ab865de6e193BBB'];
+
+// const abi1_file = './abi1.json';
+// const abi1 = await fetch(abi1_file).then(x => x.json());
+// console.log('abi1:');
+// console.log(abi1)
+// const contract_address1 = '0x06012c8cf97bead5deae237070f9587f8e7a266d';
+
+// const my_contract1 = new web3.eth.Contract(abi1, contract_address1);
+
+function sleep(milliseconds) {
+    const date = Date.now();
+    let currentDate = null;
+    do {
+      currentDate = Date.now();
+    } while (currentDate - date < milliseconds);
+  }
 
 
-var abi = [{"constant":true,"inputs":[{"name":"_interfaceID","type":"bytes4"}],"name":"supportsInterface","outputs":[{"name":"","type":"bool"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"cfoAddress","outputs":[{"name":"","type":"address"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[{"name":"_tokenId","type":"uint256"},{"name":"_preferredTransport","type":"string"}],"name":"tokenMetadata","outputs":[{"name":"infoUrl","type":"string"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"promoCreatedCount","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"name","outputs":[{"name":"","type":"string"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"_to","type":"address"},{"name":"_tokenId","type":"uint256"}],"name":"approve","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"ceoAddress","outputs":[{"name":"","type":"address"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"GEN0_STARTING_PRICE","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"_address","type":"address"}],"name":"setSiringAuctionAddress","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"totalSupply","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"pregnantKitties","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[{"name":"_kittyId","type":"uint256"}],"name":"isPregnant","outputs":[{"name":"","type":"bool"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"GEN0_AUCTION_DURATION","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"siringAuction","outputs":[{"name":"","type":"address"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"_from","type":"address"},{"name":"_to","type":"address"},{"name":"_tokenId","type":"uint256"}],"name":"transferFrom","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[{"name":"_address","type":"address"}],"name":"setGeneScienceAddress","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[{"name":"_newCEO","type":"address"}],"name":"setCEO","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[{"name":"_newCOO","type":"address"}],"name":"setCOO","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[{"name":"_kittyId","type":"uint256"},{"name":"_startingPrice","type":"uint256"},{"name":"_endingPrice","type":"uint256"},{"name":"_duration","type":"uint256"}],"name":"createSaleAuction","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[],"name":"unpause","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[{"name":"","type":"uint256"}],"name":"sireAllowedToAddress","outputs":[{"name":"","type":"address"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[{"name":"_matronId","type":"uint256"},{"name":"_sireId","type":"uint256"}],"name":"canBreedWith","outputs":[{"name":"","type":"bool"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[{"name":"","type":"uint256"}],"name":"kittyIndexToApproved","outputs":[{"name":"","type":"address"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"_kittyId","type":"uint256"},{"name":"_startingPrice","type":"uint256"},{"name":"_endingPrice","type":"uint256"},{"name":"_duration","type":"uint256"}],"name":"createSiringAuction","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[{"name":"val","type":"uint256"}],"name":"setAutoBirthFee","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[{"name":"_addr","type":"address"},{"name":"_sireId","type":"uint256"}],"name":"approveSiring","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[{"name":"_newCFO","type":"address"}],"name":"setCFO","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[{"name":"_genes","type":"uint256"},{"name":"_owner","type":"address"}],"name":"createPromoKitty","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[{"name":"secs","type":"uint256"}],"name":"setSecondsPerBlock","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"paused","outputs":[{"name":"","type":"bool"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[],"name":"withdrawBalance","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[{"name":"_tokenId","type":"uint256"}],"name":"ownerOf","outputs":[{"name":"owner","type":"address"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"GEN0_CREATION_LIMIT","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"newContractAddress","outputs":[{"name":"","type":"address"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"_address","type":"address"}],"name":"setSaleAuctionAddress","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[{"name":"_owner","type":"address"}],"name":"balanceOf","outputs":[{"name":"count","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"_v2Address","type":"address"}],"name":"setNewAddress","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"secondsPerBlock","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[],"name":"pause","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[{"name":"_owner","type":"address"}],"name":"tokensOfOwner","outputs":[{"name":"ownerTokens","type":"uint256[]"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"_matronId","type":"uint256"}],"name":"giveBirth","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[],"name":"withdrawAuctionBalances","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"symbol","outputs":[{"name":"","type":"string"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[{"name":"","type":"uint256"}],"name":"cooldowns","outputs":[{"name":"","type":"uint32"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[{"name":"","type":"uint256"}],"name":"kittyIndexToOwner","outputs":[{"name":"","type":"address"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"_to","type":"address"},{"name":"_tokenId","type":"uint256"}],"name":"transfer","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"cooAddress","outputs":[{"name":"","type":"address"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"autoBirthFee","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"erc721Metadata","outputs":[{"name":"","type":"address"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"_genes","type":"uint256"}],"name":"createGen0Auction","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[{"name":"_kittyId","type":"uint256"}],"name":"isReadyToBreed","outputs":[{"name":"","type":"bool"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"PROMO_CREATION_LIMIT","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"_contractAddress","type":"address"}],"name":"setMetadataAddress","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"saleAuction","outputs":[{"name":"","type":"address"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[{"name":"_id","type":"uint256"}],"name":"getKitty","outputs":[{"name":"isGestating","type":"bool"},{"name":"isReady","type":"bool"},{"name":"cooldownIndex","type":"uint256"},{"name":"nextActionAt","type":"uint256"},{"name":"siringWithId","type":"uint256"},{"name":"birthTime","type":"uint256"},{"name":"matronId","type":"uint256"},{"name":"sireId","type":"uint256"},{"name":"generation","type":"uint256"},{"name":"genes","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"_sireId","type":"uint256"},{"name":"_matronId","type":"uint256"}],"name":"bidOnSiringAuction","outputs":[],"payable":true,"stateMutability":"payable","type":"function"},{"constant":true,"inputs":[],"name":"gen0CreatedCount","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"geneScience","outputs":[{"name":"","type":"address"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"_matronId","type":"uint256"},{"name":"_sireId","type":"uint256"}],"name":"breedWithAuto","outputs":[],"payable":true,"stateMutability":"payable","type":"function"},{"inputs":[],"payable":false,"stateMutability":"nonpayable","type":"constructor"},{"payable":true,"stateMutability":"payable","type":"fallback"},{"anonymous":false,"inputs":[{"indexed":false,"name":"owner","type":"address"},{"indexed":false,"name":"matronId","type":"uint256"},{"indexed":false,"name":"sireId","type":"uint256"},{"indexed":false,"name":"cooldownEndBlock","type":"uint256"}],"name":"Pregnant","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"name":"from","type":"address"},{"indexed":false,"name":"to","type":"address"},{"indexed":false,"name":"tokenId","type":"uint256"}],"name":"Transfer","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"name":"owner","type":"address"},{"indexed":false,"name":"approved","type":"address"},{"indexed":false,"name":"tokenId","type":"uint256"}],"name":"Approval","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"name":"owner","type":"address"},{"indexed":false,"name":"kittyId","type":"uint256"},{"indexed":false,"name":"matronId","type":"uint256"},{"indexed":false,"name":"sireId","type":"uint256"},{"indexed":false,"name":"genes","type":"uint256"}],"name":"Birth","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"name":"newContract","type":"address"}],"name":"ContractUpgrade","type":"event"}];
+async function get_abi_pre (contract_address) {
+    let etherscan_address = 'https://api.etherscan.io/api?module=contract&action=getabi&address=';
+    let scrapping_address = etherscan_address.concat(contract_address, '&apikey=YourApiKeyToken');
+    var abi = $.getJSON(scrapping_address, (data) => {
+        return JSON.parse(JSON.stringify(data.result));
+    });
+    return abi;
+}
 
-// var abi = JSON.parse(JSON.stringify(json_interface)).filter((item) => {
-//     let decision = 'type' in item ? (item.type == 'event') : false;
-//     console.log(item);
-//     console.log(decision);
-//     return decision;
-// }).map((item) => {
-//     return item.name;
-// });
-// console.log(abi);
+async function get_abi (contract_address) {
+    let abi = await get_abi_pre(contract_address);
+    return abi.result;
+}
 
-const contract_address = '0x06012c8cf97bead5deae237070f9587f8e7a266d';
 
-const my_contract = new web3.eth.Contract(abi, contract_address);
+async function construct (contract_address) {
+    let abi_wrap = await get_abi(contract_address);
+    console.log('vdfvd');
+    let abi = JSON.parse((abi_wrap));
+    // console.log('vdfvd');
+    // console.log(abi_wrap);
+    console.log('vdfvd');
+    console.log(abi);
+    let my_contract = new web3.eth.Contract(abi, contract_address);
+    return [my_contract, abi];
+}
+
+
+async function list_construct (contract_address_list) {
+    let array = [];
+    let iter = contract_address_list.length;
+    for (let i = 0; i < iter; i++) {
+        let [contract, abi] = await construct(contract_address_list[i]);
+        sleep(5500);
+        let contract_json = {"contract": contract, "abi": abi};
+        array.push(contract_json);
+    }
+    console.log(array);
+    return array;
+}
+
 
 async function event_filter(contract, event='All') {
     var filter = {fromBlock: 14126000, toBlock: 'latest'};
@@ -54,22 +99,52 @@ async function event_scrapping(abi){
     return events;
 }
 
+function event_sort(event_list, event_numbers) {
+    let array = [];
+    let iter = event_list.length;
+    for (let i = 0; i < iter; i++) {
+        let temp = {
+            "label": event_list[i],
+            "data": event_numbers[i]
+        }
+        array.push(temp);
+    }
+
+    console.log('event_list');
+    console.log(event_list);
+    console.log('event_numbers');
+    console.log(event_numbers);
+
+    let temp_array = array.sort((a,b) => {
+        return b.data - a.data;
+    });
+    let temp_list = temp_array.map((a) => a.label);
+    let temp_numbers = temp_array.map((a) => a.data);
+
+    console.log('temp_list');
+    console.log(temp_list);
+    console.log('temp_numbers');
+    console.log(temp_numbers);
+    return [temp_list, temp_numbers];
+}
+
+
 async function event_data(contract,abi){
     let event_list = await event_scrapping(abi);
     let map = async(event) => {
         let event_occur = await event_filter(contract, event);
-        console.log(event_occur.length);
-        console.log(event);
+        console.log('event_occur:');
+        console.log(event_occur);
         return event_occur.length;
     };
     // let map_then = (event) => map(event).then((result)=>{return result;});
     let event_numbers = await Promise.map(event_list, map);
     console.log(event_numbers);
-    return [event_list, event_numbers];
+    return event_sort(event_list, event_numbers);
 }
 
 
-async function event_chart(contract, abi){
+async function event_chart(contract, abi, id){
     let [event_list, event_numbers] = await event_data(contract, abi);
     let data = {
             labels: event_list,
@@ -80,16 +155,132 @@ async function event_chart(contract, abi){
             data: event_numbers,
             }]
     };
-    const config = {
-        type: 'line',
+    let config = {
+        type: 'bar',
         data: data,
         options: {}
     };
-
-    const myChart = new Chart(
-        document.getElementById('myChart'),
+    console.log('id:');
+    console.log(id);
+    let chart_name = 'Chart'.concat('', ''+ (id + 1));
+    console.log(chart_name);
+    new Chart(
+        document.getElementById(chart_name),
         config
     );
 }
-// event_chart(my_contract);
-event_chart(my_contract,abi);
+
+async function event_charts(contract_address_list){
+    let array = [];
+    let iter = contract_address_list.length;
+    let contracts_log = await list_construct(contract_address_list);
+    for (let i = 0; i < iter; i++) {
+        await event_chart(contracts_log[i].contract, contracts_log[i].abi, i);
+    }
+}
+
+event_charts(contract_address_list);
+
+
+// async function construct (contract_address, abi_file) {
+//     let abi = await fetch(abi_file).then(x => x.json());
+//     let my_contract = new web3.eth.Contract(abi, contract_address);
+//     return [my_contract, abi];
+// }
+
+// async function list_construct (contract_address_list, abi_file_list) {
+//     let array = [];
+//     let iter = contract_address_list.length;
+//     for (let i = 0; i < iter; i++) {
+//         let [contract, abi] = await construct(contract_address_list[i], abi_file_list[i]);
+//         let contract_json = {"contract": contract, "abi": abi};
+//         array.push(contract_json);
+//     }
+//     console.log(array);
+//     return array;
+// }
+
+
+// async function event_filter(contract, event='All') {
+//     var filter = {fromBlock: 14126000, toBlock: 'latest'};
+//     var my_events = await contract.getPastEvents('allEvents', filter, (error, result) => {
+//         console.log('ERROR:' + error);
+//     }).then((events) => {
+//         console.log('bsdfbd');
+//         return events.filter((x) => {
+//             if (event == 'All') {
+//                 return true;
+//             } else {
+//                 return x.event == event;
+//             }
+//         });
+//     });
+//     console.log('my contract log:');
+//     console.log(my_events);
+//     return my_events;
+// }
+
+// async function event_scrapping(abi){
+//     let events = JSON.parse(JSON.stringify(abi)).filter((item) => {
+//         let decision = 'type' in item ? (item.type == 'event') : false;
+//         console.log(item);
+//         console.log(decision);
+//         return decision;
+//     }).map((item) => {
+//         return item.name;
+//     });
+//     console.log(events);
+//     return events;
+// }
+
+// async function event_data(contract,abi){
+//     let event_list = await event_scrapping(abi);
+//     let map = async(event) => {
+//         let event_occur = await event_filter(contract, event);
+//         console.log('event_occur:');
+//         console.log(event_occur);
+//         return event_occur.length;
+//     };
+//     // let map_then = (event) => map(event).then((result)=>{return result;});
+//     let event_numbers = await Promise.map(event_list, map);
+//     console.log(event_numbers);
+//     return [event_list, event_numbers];
+// }
+
+
+// async function event_chart(contract, abi, id){
+//     let [event_list, event_numbers] = await event_data(contract, abi);
+//     let data = {
+//             labels: event_list,
+//             datasets: [{
+//             label: 'My First dataset',
+//             backgroundColor: 'rgb(255, 99, 132)',
+//             borderColor: 'rgb(255, 99, 132)',
+//             data: event_numbers,
+//             }]
+//     };
+//     let config = {
+//         type: 'bar',
+//         data: data,
+//         options: {}
+//     };
+//     console.log('id:');
+//     console.log(id);
+//     let chart_name = 'Chart'.concat('', ''+ (id + 1));
+//     console.log(chart_name);
+//     new Chart(
+//         document.getElementById(chart_name),
+//         config
+//     );
+// }
+
+// async function event_charts(contract_address_list, abi_file_list){
+//     let array = [];
+//     let iter = contract_address_list.length;
+//     let contracts_log = await list_construct(contract_address_list, abi_file_list);
+//     for (let i = 0; i < iter; i++) {
+//         await event_chart(contracts_log[i].contract, contracts_log[i].abi, i);
+//     }
+// }
+
+// event_charts(contract_address_list, abi_file_list);
