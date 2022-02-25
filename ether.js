@@ -119,13 +119,45 @@ function event_sort(event_list, event_numbers) {
 }
 
 
-function event_value(event_occur){
+function interval_partition(partition=1, from=14160000, to= 14164271){
+    let length = Math.floor((to - from) / partition);
+    let new_interval = [];
+    for(let i = 0; i < partition; i++){
+        new_interval.push(from + (i * length));
+    }
+    console.log('new interval');
+    console.log(new_interval);
+    return new_interval;
+}
+
+
+function event_partition(specific_events, partition=1, from=14160000, to= 14164271){
+    let new_interval = interval_partition(partition, from, to);
+    let time_event_occur = [];
+    for(let i = 0; i < new_interval.length-1; i++){
+        let time_events = specific_events.filter((x) => {
+            let judge = (x.blockNumber >= new_interval[i]) && (x.blockNumber < new_interval[i+1]);
+            console.log('judge');
+            console.log(new_interval[i]);
+            console.log(x.blockNumber);
+            console.log(new_interval[i+1]);
+            console.log(judge);
+            return judge
+        });
+        time_event_occur.push(time_events.length);
+    }
+    console.log('event partition');
+    console.log(time_event_occur);
+    return time_event_occur;
+}
+
+
+
+function event_value(event_occur, partition=10, from=14160000, to= 14164271){
     let sum = 0;
     for(let i = 0; i < event_occur.length; i++){
         let event_now = event_occur[i];
         let result_values = event_now.returnValues;
-        // console.log(event_now);
-        // console.log(result_values);
         if (result_values.hasOwnProperty('value')){
             let value = event_now.returnValues.value;
             console.log('value');
@@ -133,7 +165,12 @@ function event_value(event_occur){
             sum += parseInt(value);
         }
     }
-    let event_data_list = {"totalAmount": Math.floor(sum / (10**18)), "frequency": event_occur.length};
+    let event_tendency = event_partition(event_occur, partition, from, to);
+    let event_data_list = {
+        "totalAmount": Math.floor(sum / (10**18)),
+        "frequency": event_occur.length,
+        "tendency": event_tendency
+    };
     return event_data_list;
 }
 
@@ -144,20 +181,39 @@ async function event_data(contract,abi){
         console.log('event_occur:');
         console.log(event_occur);
         return event_value(event_occur);
-        // return event_occur.length;
     };
     let event_data_list = await Promise.map(event_list, map);
     console.log(event_data_list);
-    let [event_list1, event_numbers1] = event_sort(event_list, event_data_list);
+    let [event_list1, event_data_list1] = event_sort(event_list, event_data_list);
     console.log('event_data');
     console.log(event_list1);
-    console.log(event_numbers1);
-    return [event_list1, event_numbers1];
+    console.log(event_data_list1);
+    return [event_list1, event_data_list1];
 }
+
 
 
 async function event_chart(contract, abi, id){
     let [event_list, event_data_list] = await event_data(contract, abi);
+    let tend = event_data_list[0].tendency;
+    let new_label = Array.from(Array(tend.length), (_, i) => i+1)
+
+    let data2 = {
+                labels: new_label,
+                datasets: [{
+                    label: 'Total Amount of The Event',
+                    backgroundColor: 'rgb(255, 99, 132)',
+                    borderColor: 'rgb(255, 99, 132)',
+                    data: tend,
+                }]
+        };
+    
+    let config2 = {
+            type: 'line',
+            data: data2,
+            options: {}
+        };
+
     let extract_frequency = async(data) => {
         return data.frequency;
     }
@@ -168,7 +224,7 @@ async function event_chart(contract, abi, id){
     let chartdata_frequency = await Promise.map(event_data_list, extract_frequency);
     let chartdata_totalAmount = await Promise.map(event_data_list, extract_totalAmount);
     console.log(event_data_list);
-    let data = {
+    let data1 = {
             labels: event_list,
             datasets: [{
                 label: 'Total Amount of The Event',
@@ -182,16 +238,21 @@ async function event_chart(contract, abi, id){
                 data: chartdata_frequency,
             }]
     };
-    let config = {
+    let config1 = {
         type: 'bar',
-        data: data,
+        data: data1,
         options: {}
     };
 
-    let chart_name = 'Chart'.concat('', ''+ (id + 1));
+    let chart_name1 = 'Chart'.concat('', ''+ (id + 1));
+    let chart_name2 = 'Chart'.concat('', ''+ (id + 2));
     new Chart(
-        document.getElementById(chart_name),
-        config
+        document.getElementById(chart_name1),
+        config1
+    );
+    new Chart(
+        document.getElementById(chart_name2),
+        config2
     );
 }
 
@@ -200,7 +261,7 @@ async function event_charts(contract_address_list){
     let iter = contract_address_list.length;
     let contracts_log = await list_construct(contract_address_list);
     for (let i = 0; i < iter; i++) {
-        await event_chart(contracts_log[i].contract, contracts_log[i].abi, i);
+        await event_chart(contracts_log[i].contract, contracts_log[i].abi, (3 * i));
     }
 }
 
